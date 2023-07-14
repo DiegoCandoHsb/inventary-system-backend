@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  inventorySistemDb:
+    image: postgres:14.8-alpine3.18
+    container_name: hsbbackend
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./hsbDatabase:/var/lib/postgresql/data
+    ports:
+      - ${USER_PORT}:${DB_PORT}
+
