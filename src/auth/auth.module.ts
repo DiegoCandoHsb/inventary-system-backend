@@ -3,17 +3,18 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { HsbusersModule } from 'src/hsbusers/hsbusers.module';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtContant } from './jwt-contant';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { RefreshJwtStrategy } from './strategies/rjwt.stategy';
+import { ConfigModule } from '@nestjs/config';
+import { JwtContantsList } from './constants/jwt.Contants';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: JwtContant.secret,
-      signOptions: { expiresIn: '10s' },
-    }),
+    ConfigModule.forFeature(JwtContantsList),
+    JwtModule.register({}),
     HsbusersModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy, RefreshJwtStrategy],
 })
 export class AuthModule {}
