@@ -100,13 +100,3 @@ export class HsbuserDto {
   @IsOptional()
   active?: boolean;
 }
-
-export class test2 {
-  @IsString()
-  @IsNotEmpty()
-  name2: string;
-
-  @IsString()
-  @IsNotEmpty()
-  name3: string;
-}
