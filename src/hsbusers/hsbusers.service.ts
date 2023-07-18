@@ -26,7 +26,6 @@ export class HsbusersService {
       throw new BadRequestException(
         `${userData.id} is not a valid identification`,
       );
-
     const hashedPassword = await hash(password, await genSalt(8));
 
     const findUser = await this.userRepository.preload({ id: userData.id });
@@ -85,7 +84,6 @@ export class HsbusersService {
   ) {
     if (id && !ValidateId(id))
       throw new BadRequestException(`${id} is not a valid identification`);
-
     const user = await this.userRepository.preload({
       id: idUser,
       ...userData,
