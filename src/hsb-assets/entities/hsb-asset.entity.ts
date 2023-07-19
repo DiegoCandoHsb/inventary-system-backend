@@ -13,6 +13,12 @@ class assetDetails {
     type: 'text',
     nullable: false,
   })
+  assetType: string;
+
+  @Column({
+    type: 'text',
+    nullable: false,
+  })
   responsible: string;
 
   @Column({

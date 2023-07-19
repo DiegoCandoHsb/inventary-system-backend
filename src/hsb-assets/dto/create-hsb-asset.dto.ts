@@ -10,7 +10,11 @@ import {
 import { AssetActive } from '../constants/assetActive';
 import { Type } from 'class-transformer';
 
-export class userDetailsDto {
+export class assetDetailsDto {
+  @IsString()
+  @IsNotEmpty()
+  assetType: string;
+
   @IsString()
   @IsNotEmpty()
   responsible: string;
@@ -62,10 +66,10 @@ export class CreateHsbAssetDto {
   @IsNotEmpty()
   name: string;
 
-  @Type(() => userDetailsDto)
+  @Type(() => assetDetailsDto)
   @ValidateNested()
   @IsObject()
-  details: userDetailsDto;
+  details: assetDetailsDto;
 
   @IsNotEmpty()
   @IsDateString()

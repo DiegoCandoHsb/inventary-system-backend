@@ -15,8 +15,8 @@ import { ConfigType } from '@nestjs/config';
 export class AuthService {
   // expiration token list
   private tokenExpirations: TokenList = {
-    access_token: '10s',
-    refresh_token: '7d',
+    atoken: '10s',
+    rtoken: '7d',
   };
 
   constructor(
@@ -44,7 +44,7 @@ export class AuthService {
     return {
       user,
       tokens,
-      token: tokens[0].access_token,
+      token: tokens[0].atoken,
     };
   }
 
@@ -82,4 +82,8 @@ export class AuthService {
       [tokenType]: token,
     };
   }
+
+  // refresh access token
+  // async refreshToken() {
+  // }
 }

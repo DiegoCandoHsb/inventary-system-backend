@@ -24,7 +24,6 @@ export class HsbusersController {
     return this.hsbusersService.create(createHsbuserDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get()
   findAll(@Query() pagination: PaginationDto) {
     return this.hsbusersService.findAll(pagination);
