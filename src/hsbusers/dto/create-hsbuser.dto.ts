@@ -31,7 +31,7 @@ export class userDetails {
   @IsNumberString()
   @Matches(/^\d{10}$/, {
     message:
-      'Name must be more than 5 charancters and don`t contain special symbols',
+      'Phone must be more than 5 characters and not contain special symbols',
   })
   phone: number;
 

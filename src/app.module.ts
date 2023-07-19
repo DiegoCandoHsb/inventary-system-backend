@@ -5,6 +5,7 @@ import { HsbusersModule } from './hsbusers/hsbusers.module';
 import { DatabaseSourceConfig } from './config/dbconfig';
 import { AuthModule } from './auth/auth.module';
 import { HsbAssetsModule } from './hsb-assets/hsb-assets.module';
+import { HsbcatalogModule } from './hsbcatalog/hsbcatalog.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { HsbAssetsModule } from './hsb-assets/hsb-assets.module';
     HsbusersModule,
     AuthModule,
     HsbAssetsModule,
+    HsbcatalogModule,
   ],
   controllers: [],
   providers: [],

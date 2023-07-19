@@ -35,13 +35,12 @@ export class CatalogService {
     return catalog;
   }
 
-  async findOneByName(catalogName?: string) {
+  async findOneByName(catalogName?: string, onlyFind = false) {
     const catalog = await this.catalogRepository.findOneBy({ catalogName });
     if (!catalog) {
-      // const newCatalog = this.catalogRepository.create({ catalogName });
+      if (onlyFind) return null;
 
       const newCatalog = await this.create({ catalogName });
-
       return newCatalog;
     }
 

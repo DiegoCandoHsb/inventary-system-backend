@@ -44,7 +44,7 @@ export class AuthService {
     return {
       user,
       tokens,
-      token: tokens[0],
+      token: tokens[0].access_token,
     };
   }
 

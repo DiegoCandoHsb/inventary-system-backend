@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCatalogoptionDto } from './dto/create-catalogoption.dto';
 import { UpdateCatalogoptionDto } from './dto/update-catalogoption.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -29,19 +29,48 @@ export class CatalogoptionsService {
     }
   }
 
-  findAll() {
-    return `This action returns all catalogoptions`;
+  async findAll() {
+    const options = await this.catalogOptionRepository.find();
+
+    try {
+      return options;
+    } catch (error) {
+      this.exeptionLogger.logException(error);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} catalogoption`;
+  async findOne(id: number) {
+    const option = await this.catalogOptionRepository.findOneBy({ id });
+    if (!option)
+      throw new NotFoundException(`Option with id ${id} did not found`);
+
+    return option;
   }
 
-  update(id: number, updateCatalogoptionDto: UpdateCatalogoptionDto) {
-    return `This action updates a #${id} catalogoption`;
+  async update(id: number, { catalog, catalogDetail }: UpdateCatalogoptionDto) {
+    const option = await this.catalogOptionRepository.preload({
+      id,
+      catalogDetail,
+      catalog:
+        catalog && (await this.catalogService.findOneByName(catalog, true)),
+    });
+
+    try {
+      await this.catalogOptionRepository.save(option);
+      return option;
+    } catch (error) {
+      this.exeptionLogger.logException(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} catalogoption`;
+  async remove(id: number) {
+    const option = await this.findOne(id);
+
+    try {
+      await this.catalogOptionRepository.remove(option);
+      return true;
+    } catch (error) {
+      this.exeptionLogger.logException(error);
+    }
   }
 }

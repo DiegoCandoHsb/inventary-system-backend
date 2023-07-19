@@ -6,13 +6,12 @@ export class Catalog {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true, nullable: false })
   catalogName: string;
 
   @OneToMany(() => Catalogoption, (option) => option.catalog, {
     nullable: true,
     eager: true,
-    onDelete: 'CASCADE',
   })
   catalogOptions: Catalogoption[];
 }
