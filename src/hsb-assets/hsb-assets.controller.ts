@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { HsbAssetsService } from './hsb-assets.service';
 import { CreateHsbAssetDto } from './dto/create-hsb-asset.dto';

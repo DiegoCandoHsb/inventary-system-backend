@@ -15,7 +15,7 @@ import { ConfigType } from '@nestjs/config';
 export class AuthService {
   // expiration token list
   private tokenExpirations: TokenList = {
-    atoken: '10s',
+    atoken: '1m',
     rtoken: '7d',
   };
 

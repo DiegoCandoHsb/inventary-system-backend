@@ -1,4 +1,5 @@
 import {
+  IsDate,
   IsDateString,
   IsEnum,
   IsNotEmpty,
@@ -37,7 +38,7 @@ export class assetDetailsDto {
 
   @IsNumber()
   @IsNotEmpty()
-  anualDepreciation: number;
+  annualDepreciation: number;
 
   @IsNumber()
   @IsNotEmpty()

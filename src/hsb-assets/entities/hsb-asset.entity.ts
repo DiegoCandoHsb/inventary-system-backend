@@ -48,7 +48,7 @@ class assetDetails {
     type: 'decimal',
     nullable: false,
   })
-  anualDepreciation: number;
+  annualDepreciation: number;
 
   @Column({
     type: 'decimal',
@@ -99,7 +99,7 @@ export class HsbAsset {
   details: assetDetails;
 
   @Column({
-    type: 'timestamp',
+    type: 'date',
     nullable: false,
   })
   purchaseDate: Date;
