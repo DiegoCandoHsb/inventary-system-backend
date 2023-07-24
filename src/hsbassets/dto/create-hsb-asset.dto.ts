@@ -1,5 +1,4 @@
 import {
-  IsDate,
   IsDateString,
   IsEnum,
   IsNotEmpty,
@@ -10,9 +9,11 @@ import {
 } from 'class-validator';
 import { AssetActive } from '../constants/assetActive';
 import { Type } from 'class-transformer';
+import { AssetType } from '../constants/assetType';
 
 export class assetDetailsDto {
   @IsString()
+  @IsEnum(AssetType)
   @IsNotEmpty()
   assetType: string;
 

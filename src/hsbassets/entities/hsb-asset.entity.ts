@@ -6,11 +6,12 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AssetActive } from '../constants/assetActive';
+import { AssetType } from '../constants/assetType';
 
 @Entity()
 class assetDetails {
   @Column({
-    type: 'text',
+    enum: AssetType,
     nullable: false,
   })
   assetType: string;
