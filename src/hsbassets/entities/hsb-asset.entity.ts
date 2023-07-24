@@ -19,6 +19,12 @@ class assetDetails {
     type: 'text',
     nullable: false,
   })
+  brand: string;
+
+  @Column({
+    type: 'text',
+    nullable: false,
+  })
   responsible: string;
 
   @Column({

@@ -4,8 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HsbusersModule } from './hsbusers/hsbusers.module';
 import { DatabaseSourceConfig } from './config/dbconfig';
 import { AuthModule } from './auth/auth.module';
-import { HsbAssetsModule } from './hsb-assets/hsb-assets.module';
 import { HsbcatalogModule } from './hsbcatalog/hsbcatalog.module';
+import { HsbAssetsModule } from './hsbassets/hsb-assets.module';
 
 @Module({
   imports: [

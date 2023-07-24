@@ -9,6 +9,6 @@ import { CatalogModule } from '../catalog/catalog.module';
   imports: [TypeOrmModule.forFeature([Catalogoption]), CatalogModule],
   controllers: [CatalogoptionsController],
   providers: [CatalogoptionsService],
-  exports: [],
+  exports: [CatalogoptionsService],
 })
 export class CatalogoptionsModule {}

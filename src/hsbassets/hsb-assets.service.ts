@@ -5,18 +5,37 @@ import { HandleException } from 'src/common/handleExeption';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { HsbAsset } from './entities/hsb-asset.entity';
+import { CatalogoptionsService } from 'src/hsbcatalog/catalogoptions/catalogoptions.service';
 
 @Injectable()
 export class HsbAssetsService {
   private readonly exeptionLogger = new HandleException();
 
+  private readonly configAssets = {
+    assetBrandCatalogName: 'Brands',
+  };
+
   constructor(
     @InjectRepository(HsbAsset)
     private readonly assetRepository: Repository<HsbAsset>,
+
+    private readonly catalogOptionService: CatalogoptionsService,
   ) {}
 
-  async create(createHsbAssetDto: CreateHsbAssetDto) {
-    const asset = this.assetRepository.create(createHsbAssetDto);
+  async create({ details, ...assetData }: CreateHsbAssetDto) {
+    const { brand, ...detailsData } = details;
+
+    const asset = this.assetRepository.create({
+      ...assetData,
+      details: {
+        ...detailsData,
+        brand: await this.catalogOptionService.findOneByName(
+          brand,
+          this.configAssets.assetBrandCatalogName,
+        ),
+      },
+    });
+
     try {
       await this.assetRepository.save(asset);
       return asset;

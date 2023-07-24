@@ -47,6 +47,18 @@ export class CatalogoptionsService {
     return option;
   }
 
+  async findOneByName(catalogDetail: string, catalog: string) {
+    const option = await this.catalogOptionRepository.findOneBy({
+      catalogDetail,
+    });
+
+    if (!option) {
+      return (await this.create({ catalogDetail, catalog })).catalogDetail;
+    }
+
+    return option.catalogDetail;
+  }
+
   async update(id: number, { catalog, catalogDetail }: UpdateCatalogoptionDto) {
     const option = await this.catalogOptionRepository.preload({
       id,

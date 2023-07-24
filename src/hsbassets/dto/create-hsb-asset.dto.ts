@@ -18,6 +18,10 @@ export class assetDetailsDto {
 
   @IsString()
   @IsNotEmpty()
+  brand: string;
+
+  @IsString()
+  @IsNotEmpty()
   responsible: string;
 
   @IsString()
