@@ -23,6 +23,10 @@ export class assetDetailsDto {
 
   @IsString()
   @IsNotEmpty()
+  model: string;
+
+  @IsString()
+  @IsNotEmpty()
   responsible: string;
 
   @IsString()
@@ -36,6 +40,10 @@ export class assetDetailsDto {
   @IsNumber()
   @IsNotEmpty()
   depreciationTime: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  serialNumber: number;
 
   @IsNumber()
   @IsNotEmpty()

@@ -32,6 +32,18 @@ class assetDetails {
     type: 'text',
     nullable: false,
   })
+  model: string;
+
+  @Column({
+    type: 'number',
+    nullable: false,
+  })
+  serialNumber: number;
+
+  @Column({
+    type: 'text',
+    nullable: false,
+  })
   supplier: string;
 
   @Column({
