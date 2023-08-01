@@ -35,10 +35,10 @@ class assetDetails {
   model: string;
 
   @Column({
-    type: 'number',
+    type: 'text',
     nullable: false,
   })
-  serialNumber: number;
+  serialNumber: string;
 
   @Column({
     type: 'text',

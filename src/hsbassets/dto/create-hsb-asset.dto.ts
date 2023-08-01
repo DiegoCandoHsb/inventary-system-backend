@@ -41,9 +41,9 @@ export class assetDetailsDto {
   @IsNotEmpty()
   depreciationTime: number;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  serialNumber: number;
+  serialNumber: string;
 
   @IsNumber()
   @IsNotEmpty()
