@@ -44,6 +44,9 @@ export class assetDetailsDto {
   @IsString()
   @IsNotEmpty()
   serialNumber: string;
+  @IsString()
+  @IsNotEmpty()
+  color: string;
 
   @IsNumber()
   @IsNotEmpty()
