@@ -1,9 +1,7 @@
-import { PartialType } from '@nestjs/mapped-types';
 import { Type } from 'class-transformer';
 import {
   IsPositive,
   IsString,
-  MaxLength,
   IsNotEmpty,
   IsEmail,
   MinLength,
@@ -21,17 +19,30 @@ import {
 export class userDetails {
   @IsNotEmpty()
   @IsString()
-  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{5,80}$/, {
-    message: 'Lastname must be more than 5 characters',
+  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{4,80}$/, {
+    message: 'Lastname must be more than 4 characters',
   })
   lastname: string;
 
   @IsNotEmpty()
   @IsString()
+  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{4,80}$/, {
+    message: 'Lastname must be more than 4 characters',
+  })
+  secondname: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{4,80}$/, {
+    message: 'Lastname must be more than 4 characters',
+  })
+  secondlastname: string;
+
+  @IsNotEmpty()
+  @IsString()
   @IsNumberString()
   @Matches(/^\d{10}$/, {
-    message:
-      'Phone must be more than 5 characters and not contain special symbols',
+    message: 'Phone must be with 10 characters and not contain special symbols',
   })
   phone: number;
 
@@ -74,9 +85,9 @@ export class HsbuserDto {
 
   @IsString()
   @IsNotEmpty()
-  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{5,80}$/, {
+  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{4,80}$/, {
     message:
-      'Name must be more than 5 charancters and don`t contain special symbols',
+      'Name must be more than 4 charancters and don`t contain special symbols',
   })
   name: string;
 

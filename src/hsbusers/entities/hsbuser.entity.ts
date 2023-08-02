@@ -14,6 +14,16 @@ export class Details {
   lastname: string;
 
   @Column({
+    type: 'varchar',
+  })
+  secondlastname: string;
+
+  @Column({
+    type: 'varchar',
+  })
+  secondname: string;
+
+  @Column({
     type: 'int',
   })
   phone: number;
