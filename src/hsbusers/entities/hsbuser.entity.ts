@@ -104,8 +104,12 @@ export class Hsbuser {
   @BeforeUpdate()
   changeName() {
     this.name = this.name && formatName(this.name);
+    this.details.secondname =
+      this.details.secondname && formatName(this.details.secondname);
     this.details.lastname =
       this.details.lastname && formatName(this.details.lastname);
+    this.details.secondlastname =
+      this.details.secondlastname && formatName(this.details.secondlastname);
   }
 }
 
