@@ -24,9 +24,9 @@ export class Details {
   secondname: string;
 
   @Column({
-    type: 'int',
+    type: 'varchar',
   })
-  phone: number;
+  phone: string;
 
   @Column({
     nullable: true,
