@@ -44,7 +44,7 @@ export class userDetails {
   @Matches(/^\d{10}$/, {
     message: 'Phone must be with 10 characters and not contain special symbols',
   })
-  phone: number;
+  phone: string;
 
   @IsDate()
   @IsOptional()
