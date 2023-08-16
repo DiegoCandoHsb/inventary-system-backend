@@ -19,22 +19,22 @@ import {
 export class userDetails {
   @IsNotEmpty()
   @IsString()
-  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{4,80}$/, {
-    message: 'Lastname must be more than 4 characters',
+  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{2,80}$/, {
+    message: 'Lastname must be more than 2 characters',
   })
   lastname: string;
 
   @IsNotEmpty()
   @IsString()
-  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{4,80}$/, {
-    message: 'Lastname must be more than 4 characters',
+  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{2,80}$/, {
+    message: 'Lastname must be more than 2 characters',
   })
   secondname: string;
 
   @IsNotEmpty()
   @IsString()
-  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{4,80}$/, {
-    message: 'Lastname must be more than 4 characters',
+  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{2,80}$/, {
+    message: 'Lastname must be more than 2 characters',
   })
   secondlastname: string;
 
@@ -85,9 +85,9 @@ export class HsbuserDto {
 
   @IsString()
   @IsNotEmpty()
-  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{4,80}$/, {
+  @Matches(/^[a-zA-ZÁÉÍÓÚÑáéíóúñ]{2,80}$/, {
     message:
-      'Name must be more than 4 charancters and don`t contain special symbols',
+      'Name must be more than 2 charancters and don`t contain special symbols',
   })
   name: string;
 
