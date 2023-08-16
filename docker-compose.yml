@@ -13,4 +13,3 @@ services:
       - ./hsbDatabase:/var/lib/postgresql/data
     ports:
       - ${USER_PORT}:${DB_PORT}
-
