@@ -46,8 +46,9 @@ export class HsbAssetsService {
 
   async findAll() {
     const assets = await this.assetRepository.find();
-    
-    return assets.map(asset => asset.name = asset.name.substring(0, 10));
+    const xd = assets.map(asset => asset.name = asset.name.substring(0, 10))
+    console.log(xd)
+    return assets;
   }
 
   async findOne(id: number) {
