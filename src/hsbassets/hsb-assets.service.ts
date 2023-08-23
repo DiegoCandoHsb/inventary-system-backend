@@ -49,7 +49,7 @@ export class HsbAssetsService {
     const xd = assets.map(asset => {
       return {
         ...asset,
-        name: asset.name.substring(0, 10)
+        name: asset.name.substring(0, 3)
       }
     })
     return xd;
