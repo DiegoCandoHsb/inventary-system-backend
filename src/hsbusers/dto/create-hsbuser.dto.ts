@@ -15,6 +15,7 @@ import {
   IsObject,
   Matches,
 } from 'class-validator';
+import { Permissions, Vacation } from './userVacations.dto';
 
 export class userDetails {
   @IsNotEmpty()
@@ -55,10 +56,9 @@ export class userDetails {
   @IsOptional()
   remainingDays?: number;
 
-  @IsString()
   @IsArray({ each: true })
   @IsOptional()
-  vacations?: any[];
+  vacations?: Vacation[];
 
   @IsPositive()
   @IsNumber()
@@ -70,10 +70,9 @@ export class userDetails {
   @IsOptional()
   takenDays?: number;
 
-  @IsString()
   @IsArray({ each: true })
   @IsOptional()
-  permissions?: any[];
+  permissions?: Permissions[];
 }
 
 export class HsbuserDto {

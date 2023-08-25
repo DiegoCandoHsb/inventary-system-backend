@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { HandleException } from 'src/common/handleExeption';
 import { ValidateId } from 'src/utils/idValidation';
+import { defaultDatesData } from './dto/userVacations.dto';
 
 @Injectable()
 export class HsbusersService {
@@ -40,6 +41,7 @@ export class HsbusersService {
 
     const user = this.userRepository.create({
       ...userData,
+      details: { ...userData.details, ...defaultDatesData },
       password: hashedPassword,
     });
 
