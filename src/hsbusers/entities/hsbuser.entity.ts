@@ -29,6 +29,12 @@ export class Details {
   phone: string;
 
   @Column({
+    type: 'varchar',
+    default: 'Yes',
+  })
+  payroll: 'Yes' | 'No';
+
+  @Column({
     nullable: true,
   })
   admissionDate?: Date;

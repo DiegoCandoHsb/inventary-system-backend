@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { AssetActive } from '../constants/assetActive';
 import { AssetType } from '../constants/assetType';
+import { AssetUbication } from '../constants/assetUbi';
 
 @Entity()
 class assetDetails {
@@ -103,6 +104,12 @@ class assetDetails {
     nullable: false,
   })
   active: AssetActive;
+
+  @Column({
+    enum: AssetUbication,
+    nullable: false,
+  })
+  ubication: AssetUbication;
 }
 
 @Entity({ name: 'hsbasset' })

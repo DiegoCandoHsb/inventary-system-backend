@@ -14,6 +14,8 @@ import {
   IsNumberString,
   IsObject,
   Matches,
+  IsISIN,
+  IsIn,
 } from 'class-validator';
 import { Permissions, Vacation } from './userVacations.dto';
 
@@ -46,6 +48,11 @@ export class userDetails {
     message: 'Phone must be with 10 characters and not contain special symbols',
   })
   phone: string;
+
+  @IsString()
+  @IsIn(['Yes', 'No'])
+  @IsNotEmpty()
+  payroll: 'Yes' | 'No';
 
   @IsDate()
   @IsOptional()

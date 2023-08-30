@@ -10,6 +10,7 @@ import {
 import { AssetActive } from '../constants/assetActive';
 import { Type } from 'class-transformer';
 import { AssetType } from '../constants/assetType';
+import { AssetUbication } from '../constants/assetUbi';
 
 export class assetDetailsDto {
   @IsString()
@@ -44,6 +45,7 @@ export class assetDetailsDto {
   @IsString()
   @IsNotEmpty()
   serialNumber: string;
+
   @IsString()
   @IsNotEmpty()
   color: string;
@@ -76,6 +78,11 @@ export class assetDetailsDto {
   @IsEnum(AssetActive)
   @IsNotEmpty()
   active: AssetActive;
+
+  @IsString()
+  @IsEnum(AssetUbication)
+  @IsNotEmpty()
+  ubication: AssetUbication;
 }
 
 export class CreateHsbAssetDto {
