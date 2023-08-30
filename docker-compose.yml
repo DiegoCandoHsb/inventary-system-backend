@@ -14,9 +14,9 @@ services:
     ports:
       - ${USER_PORT}:${DB_PORT}
 
-  # aplication:
-  #   image: sebastianamg/hsbapp:latest
-  #   container_name: hsbfrontend
-  #   restart: always
-  #   ports:
-  #     - ${FRONTEND_PORT}:5173
+  aplication:
+    image: sebastianamg/hsbapp:latest
+    container_name: hsbfrontend
+    restart: always
+    ports:
+      - ${FRONTEND_PORT}:5173
