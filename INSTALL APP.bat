@@ -17,5 +17,5 @@ echo # JWT config>> ./.dev.env
 echo JWT_SECRET=SECRET1>> ./.dev.env
 echo JWT_REFRESH_SECRET=SECRET2>> ./.dev.env
 echo # front app>> ./.dev.env
-echo FRONT_PORT=9000>> ./.dev.env
+echo FRONTEND_PORT=9000>> ./.dev.env
 call ./"UPDATE APP.bat"
