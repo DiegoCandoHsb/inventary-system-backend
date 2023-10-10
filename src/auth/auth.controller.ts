@@ -1,9 +1,18 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Req,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   LoginCredentialsDto,
   SignUpCredentialsDto,
 } from './dto/create-auth.dto';
+
+import { IsPublic } from 'src/common/decorators/is-public/is-public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -19,5 +28,12 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   LogIn(@Body() credentials: LoginCredentialsDto) {
     return this.authService.login(credentials);
+  }
+
+  @IsPublic()
+  @Post('verify')
+  @HttpCode(HttpStatus.OK)
+  verifyToken(@Body() token: { token: string }) {
+    return this.authService.verifyToken(token);
   }
 }

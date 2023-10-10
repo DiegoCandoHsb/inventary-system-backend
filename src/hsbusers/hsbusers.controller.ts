@@ -15,6 +15,7 @@ import { UpdateHsbuserDto } from './dto/update-hsbuser.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class HsbusersController {
   constructor(private readonly hsbusersService: HsbusersService) {}

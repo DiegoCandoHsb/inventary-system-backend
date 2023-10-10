@@ -7,11 +7,14 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { CatalogoptionsService } from './catalogoptions.service';
 import { CreateCatalogoptionDto } from './dto/create-catalogoption.dto';
 import { UpdateCatalogoptionDto } from './dto/update-catalogoption.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('catalogoptions')
 export class CatalogoptionsController {
   constructor(private readonly catalogoptionsService: CatalogoptionsService) {}

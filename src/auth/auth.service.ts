@@ -6,16 +6,21 @@ import {
 import { compare } from 'bcrypt';
 
 import { HsbusersService } from 'src/hsbusers/hsbusers.service';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
 import { JwtContantsList } from './constants/jwt.Contants';
 import { JwtPayload, TokenList } from './interfaces/';
 import { ConfigType } from '@nestjs/config';
+
+interface Xd extends JwtVerifyOptions {
+  iat: number;
+  exp: number;
+}
 
 @Injectable()
 export class AuthService {
   // expiration token list
   private tokenExpirations: TokenList = {
-    atoken: '1m',
+    atoken: '10m',
     rtoken: '7d',
   };
 
@@ -81,6 +86,21 @@ export class AuthService {
     return {
       [tokenType]: token,
     };
+  }
+
+  async verifyToken(token: { token: string }) {
+    return await this.jwtService
+      .verifyAsync<JwtVerifyOptions>(token.token, {
+        secret: this.jwtConstntsList.secret,
+      })
+      .then(({ iat, exp }: Xd) => {
+        if (exp - iat <= 0) {
+          return false;
+        }
+
+        return true;
+      })
+      .catch(() => false);
   }
 
   // refresh access token

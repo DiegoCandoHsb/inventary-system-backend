@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { HsbuserDto } from './dto/create-hsbuser.dto';
 import { UpdateHsbuserDto } from './dto/update-hsbuser.dto';
@@ -24,7 +25,6 @@ export class HsbusersService {
   ) {}
   async create({ password, ...userData }: HsbuserDto) {
     if (!ValidateId(userData.id)) {
-      console.log(userData.id);
       throw new BadRequestException(
         `${userData.id} is not a valid identification`,
       );

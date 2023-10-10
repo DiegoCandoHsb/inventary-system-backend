@@ -11,7 +11,9 @@ import {
 import { HsbAssetsService } from './hsb-assets.service';
 import { CreateHsbAssetDto } from './dto/create-hsb-asset.dto';
 import { UpdateHsbAssetDto } from './dto/update-hsb-asset.dto';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('assets')
 export class HsbAssetsController {
   constructor(private readonly hsbAssetsService: HsbAssetsService) {}
