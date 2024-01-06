@@ -1,0 +1,13 @@
+node_modules/
+test/
+.env
+.dockerignore
+.editorconfig
+.eslintrc
+.gitignore
+.prettierrc
+.yml
+.bat
+Dockerfile
+dockerfile
+README.md

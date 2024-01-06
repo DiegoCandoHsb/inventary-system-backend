@@ -14,7 +14,6 @@ import {
   IsNumberString,
   IsObject,
   Matches,
-  IsISIN,
   IsIn,
 } from 'class-validator';
 import { Permissions, Vacation } from './userVacations.dto';

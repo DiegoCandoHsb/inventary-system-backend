@@ -1,0 +1,22 @@
+# ------------- APP FRONTEND -------------
+FROM node:lts-alpine3.18 as DEPS
+WORKDIR /app
+COPY ./inventarySystem/package*.json ./
+RUN ["npm", "install"]
+
+FROM node:lts-alpine3.18 as BUILDER
+WORKDIR /app
+COPY --from=DEPS ./app/node_modules ./node_modules
+COPY ./inventarySystem ./
+RUN ["npm", "run", "build"]
+
+FROM node:lts-alpine3.18 as RUNNER
+WORKDIR /app
+COPY --from=DEPS /app/node_modules ./node_modules
+COPY --from=DEPS ./app/package*.json ./
+COPY --from=BUILDER ./app/dist ./dist
+COPY ./inventarySystem/vite.config.ts ./
+ENV VITE_BACKEND_BASE_PATH = http://161.97.140.245:5000/api/v1
+RUN echo $VITE_BACKEND_BASE_PATH
+EXPOSE 2000
+CMD ["npm", "run", "preview"]

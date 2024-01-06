@@ -1,0 +1,21 @@
+# ------------- APP BACKEND -------------
+FROM node:lts-alpine3.18 as DEPS
+WORKDIR /app
+COPY ./inventary-system-backend/package*.json ./
+RUN ["npm", "install"]
+
+FROM node:lts-alpine3.18 as BUILDER
+WORKDIR /app
+COPY --from=DEPS /app/node_modules ./node_modules
+COPY ./inventary-system-backend/package*.json ./
+COPY ./inventary-system-backend .
+RUN npm run build
+
+FROM node:lts-alpine3.18 as RUNNER
+WORKDIR /app
+COPY --from=DEPS /app/node_modules /node_modules
+COPY --from=BUILDER /app/dist ./dist
+EXPOSE 4000
+CMD [ "node", "dist/main" ]
+
+
