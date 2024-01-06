@@ -102,4 +102,32 @@ networks:
 ```
 
 - Ejecutamos el comando para levantar todos los contenedores
+
   > `docker compose up [flags]`
+
+- El docker-compose trabaja en conjunto con un archivo .env en cual podremos modificar
+
+#### - .env :
+
+```
+# ---------- BACKEND CONFIG ----------
+# app config
+PORT=5000
+
+# db config
+USER_PORT=5432
+DB_PORT=5432
+
+DB_HOST=appDatabase
+DB_NAME=myDb
+DB_USER=myUser
+DB_PASSWORD=myPass
+
+# JWT config
+JWT_SECRET=SECRET1
+JWT_REFRESH_SECRET=SECRET2
+
+# ---------- FRONTEND CONFIG ----------
+FRONTEND_PORT = 7000
+BACKEND_BASE_URL = ${DB_PORT}/api/v1
+```
