@@ -126,8 +126,5 @@ export class Hsbuser {
 }
 
 function formatName(name: string) {
-  return name
-    .charAt(0)
-    .toLocaleUpperCase()
-    .concat(name.slice(1, name.length).trim());
+  return name.charAt(0).toUpperCase().concat(name.slice(1, name.length)).trim();
 }

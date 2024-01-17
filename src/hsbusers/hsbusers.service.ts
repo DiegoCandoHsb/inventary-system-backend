@@ -53,7 +53,7 @@ export class HsbusersService {
     }
   }
 
-  findAll({ limit = 20, offset = 0 }: PaginationDto) {
+  findAll({ limit = 1000, offset = 0 }: PaginationDto) {
     const users = this.userRepository.find({
       take: limit,
       skip: offset,
