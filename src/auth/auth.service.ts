@@ -11,7 +11,7 @@ import { JwtContantsList } from './constants/jwt.Contants';
 import { JwtPayload, TokenList } from './interfaces/';
 import { ConfigType } from '@nestjs/config';
 
-interface Xd extends JwtVerifyOptions {
+interface JwtOptions extends JwtVerifyOptions {
   iat: number;
   exp: number;
 }
@@ -20,10 +20,9 @@ interface Xd extends JwtVerifyOptions {
 export class AuthService {
   // expiration token list
   private tokenExpirations: TokenList = {
-    atoken: '10m',
+    atoken: '10s',
     rtoken: '7d',
   };
-
   constructor(
     @Inject(JwtContantsList.KEY)
     private readonly jwtConstntsList: ConfigType<typeof JwtContantsList>,
@@ -46,14 +45,25 @@ export class AuthService {
     const payload = { id: user.id, name: user.name, role: 'admin' };
 
     const tokens = await this.getTokens(payload);
+
+    // await this.getJWT(tokens[0].atoken);
+
     return {
       user,
-      tokens,
+      // tokens,
       token: tokens[0].atoken,
     };
   }
 
   // JWT mehtods
+  async getJWT(payload: JwtPayload) {
+    const token = this.jwtService.signAsync(payload, {
+      secret: this.jwtConstntsList.secret,
+      expiresIn: this.tokenExpirations.atoken,
+    });
+    return token;
+  }
+
   async getTokens(payload: JwtPayload): Promise<TokenList[]> {
     const tokenList = await Promise.all([
       ...Object.keys(this.tokenExpirations).map(
@@ -65,6 +75,7 @@ export class AuthService {
     return tokenList as TokenList[];
   }
 
+  // jwt and refresh token
   async getJWTbyType(
     payload: JwtPayload,
     tokenType: keyof TokenList,
@@ -93,17 +104,15 @@ export class AuthService {
       .verifyAsync<JwtVerifyOptions>(token.token, {
         secret: this.jwtConstntsList.secret,
       })
-      .then(({ iat, exp }: Xd) => {
+      .then(async ({ iat, exp, ...tokenPayload }: JwtOptions) => {
         if (exp - iat <= 0) {
           return false;
         }
 
-        return true;
+        const newToken = await this.getJWT(tokenPayload as JwtPayload);
+
+        return newToken;
       })
       .catch(() => false);
   }
-
-  // refresh access token
-  // async refreshToken() {
-  // }
 }

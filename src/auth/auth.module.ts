@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module, forwardRef } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { HsbusersModule } from 'src/hsbusers/hsbusers.module';
@@ -8,6 +8,7 @@ import { RefreshJwtStrategy } from './strategies/rjwt.stategy';
 import { ConfigModule } from '@nestjs/config';
 import { JwtContantsList } from './constants/jwt.Contants';
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forFeature(JwtContantsList),
@@ -16,5 +17,6 @@ import { JwtContantsList } from './constants/jwt.Contants';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, RefreshJwtStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}

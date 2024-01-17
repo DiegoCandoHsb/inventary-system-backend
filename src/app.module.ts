@@ -6,6 +6,7 @@ import { DatabaseSourceConfig } from './config/dbconfig';
 import { AuthModule } from './auth/auth.module';
 import { HsbcatalogModule } from './hsbcatalog/hsbcatalog.module';
 import { HsbAssetsModule } from './hsbassets/hsb-assets.module';
+import { JwtContantsList } from './auth/constants/jwt.Contants';
 
 @Module({
   imports: [
@@ -14,9 +15,10 @@ import { HsbAssetsModule } from './hsbassets/hsb-assets.module';
       isGlobal: true,
       cache: true,
       envFilePath: `.${process.env.NODE_ENV}.env`,
+      load: [JwtContantsList],
     }),
-    HsbusersModule,
     AuthModule,
+    HsbusersModule,
     HsbAssetsModule,
     HsbcatalogModule,
   ],
