@@ -117,8 +117,17 @@ export class Hsbuser {
     this.details.secondlastname =
       this.details.secondlastname && formatName(this.details.secondlastname);
   }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  formatEmail() {
+    this.email = this.email.toLowerCase();
+  }
 }
 
 function formatName(name: string) {
-  return name.charAt(0).toLocaleUpperCase().concat(name.slice(1, name.length));
+  return name
+    .charAt(0)
+    .toLocaleUpperCase()
+    .concat(name.slice(1, name.length).trim());
 }

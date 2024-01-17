@@ -74,7 +74,9 @@ export class HsbusersService {
   }
 
   async findOneByEmail(email: string) {
-    const user = await this.userRepository.findOneBy({ email });
+    const user = await this.userRepository.findOneBy({
+      email: email.toLowerCase().trim(),
+    });
     if (!user)
       throw new NotFoundException(
         `User with email ${email} does not exist, signup`,

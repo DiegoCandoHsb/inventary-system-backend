@@ -20,7 +20,7 @@ interface JwtOptions extends JwtVerifyOptions {
 export class AuthService {
   // expiration token list
   private tokenExpirations: TokenList = {
-    atoken: '10s',
+    atoken: '20m',
     rtoken: '7d',
   };
   constructor(
