@@ -15,6 +15,7 @@ import {
   IsObject,
   Matches,
   IsIn,
+  IsDateString,
 } from 'class-validator';
 import { Permissions, Vacation } from './userVacations.dto';
 
@@ -53,7 +54,7 @@ export class userDetails {
   @IsNotEmpty()
   payroll: 'Yes' | 'No';
 
-  @IsDate()
+  @IsDateString()
   @IsOptional()
   admissionDate?: Date;
 
@@ -62,7 +63,7 @@ export class userDetails {
   @IsOptional()
   remainingDays?: number;
 
-  @IsArray({ each: true })
+  @IsArray()
   @IsOptional()
   vacations?: Vacation[];
 
@@ -76,7 +77,7 @@ export class userDetails {
   @IsOptional()
   takenDays?: number;
 
-  @IsArray({ each: true })
+  @IsArray()
   @IsOptional()
   permissions?: Permissions[];
 }

@@ -40,7 +40,7 @@ export class AuthService {
     const user = await this.hsbuserService.findOneByEmail(email);
 
     if (!(await compare(password, user.password)))
-      throw new UnauthorizedException(`Incorrect password, please check it`);
+      throw new UnauthorizedException(`Email or password incorrect`);
 
     const payload = { id: user.id, name: user.name, role: 'admin' };
 

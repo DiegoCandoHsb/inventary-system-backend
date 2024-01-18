@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { HsbuserDto } from './dto/create-hsbuser.dto';
@@ -53,13 +54,18 @@ export class HsbusersService {
     }
   }
 
-  findAll({ limit = 1000, offset = 0 }: PaginationDto) {
-    const users = this.userRepository.find({
+  async findAll({ limit = 1000, offset = 0 }: PaginationDto) {
+    const users = await this.userRepository.find({
       take: limit,
       skip: offset,
     });
 
-    return users;
+    const usersWithoutPassword = users.map((user) => {
+      delete user.password;
+      return user;
+    });
+
+    return usersWithoutPassword;
   }
 
   async findOne(id: string) {
@@ -77,28 +83,27 @@ export class HsbusersService {
     const user = await this.userRepository.findOneBy({
       email: email.toLowerCase().trim(),
     });
-    if (!user)
-      throw new NotFoundException(
-        `User with email ${email} does not exist, signup`,
-      );
+    if (!user) throw new UnauthorizedException('Email or password incorrect');
 
     return user;
   }
 
   async update(
-    idUser: string,
+    userId: string,
     { id, password, ...userData }: UpdateHsbuserDto,
   ) {
     if (id && !ValidateId(id))
       throw new BadRequestException(`${id} is not a valid identification`);
     const user = await this.userRepository.preload({
-      id: idUser,
+      id: userId,
       ...userData,
-      password: password ? await hash(password, await genSalt(8)) : password,
+      password:
+        password && password !== undefined
+          ? await hash(password, await genSalt(8))
+          : password,
     });
 
-    if (!user)
-      throw new NotFoundException(`User with id: ${idUser}, not found`);
+    if (!user) throw new NotFoundException(`User with id: ${userId} not found`);
 
     try {
       await this.userRepository.save(user);
