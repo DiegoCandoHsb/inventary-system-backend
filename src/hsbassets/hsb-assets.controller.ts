@@ -28,7 +28,6 @@ import { IsPublic } from 'src/common/decorators/is-public/is-public.decorator';
 export class HsbAssetsController {
   constructor(private readonly hsbAssetsService: HsbAssetsService) {}
 
-  @IsPublic()
   // @Post()
   // create(@Body() createHsbAssetDto: CreateHsbAssetDto) {
   //   return this.hsbAssetsService.create(createHsbAssetDto);
@@ -55,7 +54,6 @@ export class HsbAssetsController {
   // ) {
   //   return this.hsbAssetsService.update(+id, updateHsbAssetDto);
   // }
-  @IsPublic()
   @Patch(':id')
   update(
     @Param('id') id: string,
