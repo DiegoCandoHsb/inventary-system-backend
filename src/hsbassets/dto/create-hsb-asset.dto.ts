@@ -1,22 +1,25 @@
 import {
+  IsBoolean,
   IsDateString,
   IsEnum,
   IsNotEmpty,
   IsNumber,
   IsObject,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { AssetActive } from '../constants/assetActive';
 import { Type } from 'class-transformer';
 import { AssetType } from '../constants/assetType';
-import { AssetUbication } from '../constants/assetUbi';
 
 export class assetDetailsDto {
   @IsString()
-  @IsEnum(AssetType)
   @IsNotEmpty()
-  assetType: string;
+  code: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  quantity: number;
 
   @IsString()
   @IsNotEmpty()
@@ -27,28 +30,32 @@ export class assetDetailsDto {
   model: string;
 
   @IsString()
-  @IsNotEmpty()
-  responsible: string;
-
-  @IsString()
-  @IsNotEmpty()
-  supplier: string;
-
-  @IsNumber()
-  @IsNotEmpty()
-  value: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  depreciationTime: number;
+  @IsOptional()
+  color: string;
 
   @IsString()
   @IsNotEmpty()
   serialNumber: string;
 
   @IsString()
+  @IsOptional()
+  invoice: string;
+
+  @IsString()
   @IsNotEmpty()
-  color: string;
+  provider: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  unitValue: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  totalValue: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  depreciationTime: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -66,29 +73,65 @@ export class assetDetailsDto {
   @IsNotEmpty()
   valueBooks: number;
 
-  @IsString()
-  @IsNotEmpty()
-  observation: string;
-
   @IsNumber()
-  @IsNotEmpty()
+  @IsOptional()
   insured: number;
 
-  @IsString()
-  @IsEnum(AssetActive)
+  @IsBoolean()
   @IsNotEmpty()
-  active: AssetActive;
+  active: boolean;
 
   @IsString()
-  @IsEnum(AssetUbication)
   @IsNotEmpty()
-  ubication: AssetUbication;
+  responsible: string;
+
+  @IsNotEmpty()
+  @IsString()
+  state: string;
+
+  @IsNotEmpty()
+  @IsString()
+  ubication: string;
+
+  @IsEnum(AssetType)
+  @IsNotEmpty()
+  @IsString()
+  type: AssetType;
+
+  @IsString()
+  @IsOptional()
+  observation: string;
+
+  // EE fields
+  @IsString()
+  @IsOptional()
+  inches: string;
+
+  @IsString()
+  @IsOptional()
+  processor: string;
+
+  @IsNumber()
+  @IsOptional()
+  kitValue: number;
+
+  @IsString()
+  @IsOptional()
+  speed: string;
+
+  @IsString()
+  @IsOptional()
+  ram: string;
+
+  @IsString()
+  @IsOptional()
+  hdd: string;
 }
 
 export class CreateHsbAssetDto {
   @IsString()
   @IsNotEmpty()
-  name: string;
+  itemName: string;
 
   @Type(() => assetDetailsDto)
   @ValidateNested()
@@ -98,4 +141,128 @@ export class CreateHsbAssetDto {
   @IsNotEmpty()
   @IsDateString()
   purchaseDate: Date;
+}
+
+export class CreateHsbAssetDto2 {
+  @IsString()
+  @IsNotEmpty()
+  code: string;
+
+  @IsString()
+  @IsNotEmpty()
+  itemName: string;
+
+  @IsNotEmpty()
+  @IsDateString()
+  purchaseDate: Date;
+
+  @IsNumber()
+  @IsNotEmpty()
+  quantity: number;
+
+  @IsString()
+  @IsNotEmpty()
+  brand: string;
+
+  @IsString()
+  @IsNotEmpty()
+  model: string;
+
+  @IsString()
+  @IsOptional()
+  color: string;
+
+  @IsString()
+  @IsNotEmpty()
+  serialNumber: string;
+
+  @IsString()
+  @IsOptional()
+  invoice: string;
+
+  @IsString()
+  @IsNotEmpty()
+  provider: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  unitValue: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  totalValue: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  depreciationTime: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  residualValue: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  annualDepreciation: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  monthlyDepreciation: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  valueBooks: number;
+
+  @IsNumber()
+  @IsOptional()
+  insured: number;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  active: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  responsible: string;
+
+  @IsNotEmpty()
+  @IsString()
+  state: string;
+
+  @IsNotEmpty()
+  @IsString()
+  ubication: string;
+
+  @IsEnum(AssetType)
+  @IsNotEmpty()
+  @IsString()
+  type: AssetType;
+
+  @IsString()
+  @IsOptional()
+  observation: string;
+
+  // EE fields
+  @IsString()
+  @IsOptional()
+  inches: string;
+
+  @IsString()
+  @IsOptional()
+  processor: string;
+
+  @IsNumber()
+  @IsOptional()
+  kitValue: number;
+
+  @IsString()
+  @IsOptional()
+  speed: string;
+
+  @IsString()
+  @IsOptional()
+  ram: string;
+
+  @IsString()
+  @IsOptional()
+  hdd: string;
 }

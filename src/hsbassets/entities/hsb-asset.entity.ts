@@ -5,17 +5,21 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { AssetActive } from '../constants/assetActive';
 import { AssetType } from '../constants/assetType';
-import { AssetUbication } from '../constants/assetUbi';
 
 @Entity()
 class assetDetails {
   @Column({
-    enum: AssetType,
+    type: 'text',
     nullable: false,
   })
-  assetType: string;
+  code: string;
+
+  @Column({
+    type: 'int',
+    nullable: false,
+  })
+  quantity: number;
 
   @Column({
     type: 'text',
@@ -27,19 +31,13 @@ class assetDetails {
     type: 'text',
     nullable: false,
   })
-  color: string;
-
-  @Column({
-    type: 'text',
-    nullable: false,
-  })
-  responsible: string;
-
-  @Column({
-    type: 'text',
-    nullable: false,
-  })
   model: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  color: string;
 
   @Column({
     type: 'text',
@@ -49,17 +47,30 @@ class assetDetails {
 
   @Column({
     type: 'text',
-    nullable: false,
+    nullable: true,
   })
-  supplier: string;
+  invoice: string;
 
   @Column({
-    type: 'int',
+    type: 'text',
     nullable: false,
   })
-  value: number;
+  provider: string;
+
   @Column({
-    type: 'int',
+    type: 'decimal',
+    nullable: false,
+  })
+  unitValue: number;
+
+  @Column({
+    type: 'decimal',
+    nullable: false,
+  })
+  totalValue: number;
+
+  @Column({
+    type: 'decimal',
     nullable: false,
   })
   depreciationTime: number;
@@ -89,27 +100,83 @@ class assetDetails {
   valueBooks: number;
 
   @Column({
-    type: 'text',
-    nullable: false,
-  })
-  observation: string;
-  @Column({
     type: 'decimal',
-    nullable: false,
+    nullable: true,
   })
   insured: number;
 
   @Column({
-    enum: AssetActive,
+    type: 'text',
     nullable: false,
   })
-  active: AssetActive;
+  state: string;
 
   @Column({
-    enum: AssetUbication,
+    type: 'boolean',
     nullable: false,
   })
-  ubication: AssetUbication;
+  active: boolean;
+
+  @Column({
+    type: 'text',
+    nullable: false,
+  })
+  responsible: string;
+
+  @Column({
+    type: 'text',
+    nullable: false,
+  })
+  ubication: string; //
+
+  @Column({
+    enum: AssetType,
+    nullable: false,
+  })
+  type: AssetType;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  observation: string;
+
+  // EE fields
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  inches: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  processor: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  kitValue: number;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  speed: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  ram: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  hdd: string;
 }
 
 @Entity({ name: 'hsbasset' })
@@ -118,11 +185,10 @@ export class HsbAsset {
   id: number;
 
   @Column({
-    type: 'varchar',
-    length: 255,
+    type: 'text',
     nullable: false,
   })
-  name: string;
+  itemName: string;
 
   @Column({
     type: 'json',
@@ -139,7 +205,7 @@ export class HsbAsset {
   @BeforeInsert()
   @BeforeUpdate()
   changeName() {
-    this.name = this.name && formatName(this.name);
+    this.itemName = this.itemName && formatName(this.itemName);
   }
 }
 

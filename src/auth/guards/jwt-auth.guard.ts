@@ -20,13 +20,12 @@ export class JwtAuthGuard extends AuthGuard('accessJWT') {
     const isPublic = this.context.get(isPublicKey, context.getHandler());
     if (isPublic) return isPublic;
 
-    const token = context
-      .switchToHttp()
-      .getRequest<Request>()
-      .headers.authorization.replace('Bearer ', '')
-      .trim();
+    let token = context.switchToHttp().getRequest<Request>()
+      .headers.authorization;
 
     if (!token) return false;
+
+    token = token.replace('Bearer ', '').trim();
 
     const tokenVerified = await this.authService.verifyToken({ token });
 
