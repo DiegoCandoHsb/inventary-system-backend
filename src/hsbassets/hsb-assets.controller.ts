@@ -22,6 +22,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { IsPublic } from 'src/common/decorators/is-public/is-public.decorator';
+import { AssetType } from './constants/assetType';
 
 @UseGuards(JwtAuthGuard)
 @Controller('assets')
@@ -40,6 +41,12 @@ export class HsbAssetsController {
   @Get()
   findAll() {
     return this.hsbAssetsService.findAll();
+  }
+
+  @IsPublic()
+  @Get(':type')
+  findByType(@Param('type') type: AssetType) {
+    return this.hsbAssetsService.findEspecificAssets(type);
   }
 
   @Get(':id')

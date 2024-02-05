@@ -19,6 +19,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { HsbAsset } from './entities/hsb-asset.entity';
 import { CatalogoptionsService } from 'src/hsbcatalog/catalogoptions/catalogoptions.service';
+import { AssetType } from './constants/assetType';
 
 @Injectable()
 export class HsbAssetsService {
@@ -86,6 +87,15 @@ export class HsbAssetsService {
     return assets;
   }
 
+  async findEspecificAssets(type: AssetType) {
+    const specific = await this.assetRepository
+      .createQueryBuilder('hsbassets')
+      .where("hsbassets.details->>'type' ILIKE :type", { type: `%${type}%` })
+      .getMany();
+
+    return specific;
+  }
+
   async findOne(id: number) {
     const asset = await this.assetRepository.findOneBy({ id });
     if (!asset) throw new NotFoundException(`user with id: ${id}, not found`);
@@ -126,7 +136,8 @@ export class HsbAssetsService {
   }
 
   formatAssetPlainData(data: CreateHsbAssetDto2 | UpdateHsbAssetDto2) {
-    const { itemName, purchaseDate, ...details } = data;
+    const { itemName, purchaseDate, id, ...details } =
+      data as CreateHsbAssetDto2 & UpdateHsbAssetDto2 & { id: number };
 
     const formatedData = {
       itemName,
@@ -150,24 +161,22 @@ export class HsbAssetsService {
 
   async uploadFile(file: Express.Multer.File) {
     if (!file) throw new UnprocessableEntityException('File error');
-    console.log('file', file);
+
     const workbook = XLSX.read(file.buffer, {
       type: 'buffer',
       cellDates: true,
       // raw: true,
     });
 
-    const woorksheetData = XLSX.utils.sheet_to_json(
+    const woorksheetData: CreateHsbAssetDto2[] = XLSX.utils.sheet_to_json(
       workbook.Sheets[workbook.SheetNames[0]],
-      {
-        header: ['code', 'quantity', 'item', 'brand', 'inches', 'model'],
-        defval: null,
-        blankrows: false,
-      },
     );
-    // .filter((x) => (x as Array<string>).length > 3);
 
-    console.log(woorksheetData);
+    const xd = woorksheetData.map((assetData) => {
+      return this.formatAssetPlainData(assetData);
+    });
+
+    await this.assetRepository.save(xd);
 
     return;
   }
