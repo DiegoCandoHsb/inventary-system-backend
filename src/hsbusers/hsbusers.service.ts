@@ -79,11 +79,49 @@ export class HsbusersService {
     return user;
   }
 
+  getUserCompleteName({
+    name,
+    details: { lastname, secondlastname, secondname },
+  }: Hsbuser) {
+    const userName = name.concat(
+      ' ',
+      secondname,
+      ' ',
+      lastname,
+      ' ',
+      secondlastname,
+    );
+    return userName;
+  }
+
+  // getUserIdName()
+
   async findOneByEmail(email: string) {
     const user = await this.userRepository.findOneBy({
       email: email.toLowerCase().trim(),
     });
     if (!user) throw new UnauthorizedException('Email or password incorrect');
+
+    return user;
+  }
+
+  async findOnebyFullName(fullName: string) {
+    const dividedName = fullName.split(' ');
+    const user = await this.userRepository
+      .createQueryBuilder('hsbuser')
+      .where('hsbuser.name ILIKE :name', {
+        name: `%${dividedName[0]}%`,
+      })
+      .andWhere("hsbuser.details->>'secondname' ILIKE :secondname", {
+        secondname: `%${dividedName[1]}%`,
+      })
+      .andWhere("hsbuser.details->>'lastname' ILIKE :lastname", {
+        lastname: `%${dividedName[2]}%`,
+      })
+      .andWhere("hsbuser.details->>'secondlastname' ILIKE :secondlastname", {
+        secondlastname: `%${dividedName[3]}%`,
+      })
+      .getOne();
 
     return user;
   }
@@ -114,7 +152,7 @@ export class HsbusersService {
   }
 
   async remove(id: string) {
-    const user = await this.findOne(id);
+    const user = (await this.findOne(id)) as Hsbuser;
     try {
       await this.userRepository.remove(user);
       return true;

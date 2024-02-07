@@ -143,6 +143,7 @@ export class CreateHsbAssetDto {
   purchaseDate: Date;
 }
 
+// real
 export class CreateHsbAssetDto2 {
   @IsString()
   @IsNotEmpty()

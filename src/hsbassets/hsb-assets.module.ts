@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { HsbAsset } from './entities/hsb-asset.entity';
 import { CatalogoptionsModule } from 'src/hsbcatalog/catalogoptions/catalogoptions.module';
 import { JwtModule } from '@nestjs/jwt';
+import { HsbusersModule } from 'src/hsbusers/hsbusers.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([HsbAsset]),
     CatalogoptionsModule,
     JwtModule.register({}),
+    HsbusersModule,
   ],
   controllers: [HsbAssetsController],
   providers: [HsbAssetsService],

@@ -9,20 +9,18 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  Res,
+  Req,
 } from '@nestjs/common';
 import { HsbAssetsService } from './hsb-assets.service';
-import {
-  CreateHsbAssetDto,
-  CreateHsbAssetDto2,
-} from './dto/create-hsb-asset.dto';
-import {
-  UpdateHsbAssetDto,
-  UpdateHsbAssetDto2,
-} from './dto/update-hsb-asset.dto';
+import { CreateHsbAssetDto2 } from './dto/create-hsb-asset.dto';
+import { UpdateHsbAssetDto2 } from './dto/update-hsb-asset.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { IsPublic } from 'src/common/decorators/is-public/is-public.decorator';
 import { AssetType } from './constants/assetType';
+
+import { Request } from 'express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('assets')
@@ -33,6 +31,7 @@ export class HsbAssetsController {
   // create(@Body() createHsbAssetDto: CreateHsbAssetDto) {
   //   return this.hsbAssetsService.create(createHsbAssetDto);
   // }
+  @IsPublic()
   @Post()
   create(@Body() createHsbAssetDto: CreateHsbAssetDto2) {
     return this.hsbAssetsService.create2(createHsbAssetDto);
@@ -79,5 +78,16 @@ export class HsbAssetsController {
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return this.hsbAssetsService.uploadFile(file);
+  }
+
+  @IsPublic()
+  @Post('download')
+  downdloadFile(
+    @Body() paylaod: { assets: CreateHsbAssetDto2[]; fileName: string },
+  ) {
+    return this.hsbAssetsService.downloadAssetXlsx(
+      paylaod.assets,
+      paylaod.fileName,
+    );
   }
 }
