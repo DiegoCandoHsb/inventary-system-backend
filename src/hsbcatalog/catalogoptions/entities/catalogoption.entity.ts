@@ -1,5 +1,7 @@
 import { Catalog } from 'src/hsbcatalog/catalog/entities/catalog.entity';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -15,6 +17,7 @@ export class Catalogoption {
   @Column({
     type: 'varchar',
     length: 250,
+    unique: true,
   })
   catalogDetail: string;
 
@@ -23,4 +26,10 @@ export class Catalogoption {
   })
   @JoinColumn()
   catalog: Catalog;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  formatName() {
+    this.catalogDetail = this.catalogDetail.toUpperCase();
+  }
 }

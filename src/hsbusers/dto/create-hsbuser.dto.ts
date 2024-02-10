@@ -6,7 +6,6 @@ import {
   IsEmail,
   MinLength,
   IsBoolean,
-  IsDate,
   IsNumber,
   IsArray,
   IsOptional,

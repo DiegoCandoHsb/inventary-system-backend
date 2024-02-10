@@ -10,10 +10,7 @@ import {
   CreateHsbAssetDto,
   CreateHsbAssetDto2,
 } from './dto/create-hsb-asset.dto';
-import {
-  UpdateHsbAssetDto,
-  UpdateHsbAssetDto2,
-} from './dto/update-hsb-asset.dto';
+import { UpdateHsbAssetDto2 } from './dto/update-hsb-asset.dto';
 import { HandleException } from 'src/common/handleExeption';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -39,110 +36,65 @@ export class HsbAssetsService {
     private readonly userService: HsbusersService,
   ) {}
 
-  // async create({ details, ...assetData }: CreateHsbAssetDto) {
-  //   const { brand, ...detailsData } = details;
-
-  //   const asset = this.assetRepository.create({
-  //     ...assetData,
-  //     details: {
-  //       ...detailsData,
-  //       brand: await this.catalogOptionService.findOneByName(
-  //         brand,
-  //         this.configAssets.assetBrandCatalogName,
-  //       ),
-  //     },
-  //   });
-
-  //   try {
-  //     await this.assetRepository.save(asset);
-  //     return asset;
-  //   } catch (error) {
-  //     this.exeptionLogger.logException(error);
-  //   }
-  // }
-
   async create2(
     createHsbAssetPlainDto: CreateHsbAssetDto2 | CreateHsbAssetDto2[],
     assetsArr?: CreateHsbAssetDto[],
   ) {
-    let assets;
+    const assets = assetsArr ? assetsArr : await this.findAll();
 
-    if (!assetsArr) {
-      assets = await this.findAll();
-    } else {
-      assets = assetsArr;
-    }
     try {
-      if (Array.isArray(createHsbAssetPlainDto)) {
-        const jajajxd = await createHsbAssetPlainDto.map(
-          async (createHsbAssetPlainDto2) => {
-            const { code } = createHsbAssetPlainDto2;
+      if (!Array.isArray(createHsbAssetPlainDto)) {
+        createHsbAssetPlainDto = [createHsbAssetPlainDto];
+      }
 
-            const assetAlreadyExist = assets.find(
-              (asset) => asset.details.code === code,
-            );
+      const brandsList: Set<string> = new Set();
 
-            if (assetAlreadyExist)
-              return await this.update2(
-                assetAlreadyExist.id,
-                createHsbAssetPlainDto2,
-              );
+      const promiseAssetsArr = await Promise.all(
+        createHsbAssetPlainDto.map(async (createHsbAssetPlainDto2) => {
+          const brand = createHsbAssetPlainDto2.brand.toUpperCase();
 
-            const { details, ...data } = this.formatAssetPlainData(
+          brandsList.add(createHsbAssetPlainDto2.brand);
+
+          const { code } = createHsbAssetPlainDto2;
+
+          const assetAlreadyExist = assets.find(
+            (asset) => asset.details.code === code,
+          );
+
+          if (assetAlreadyExist)
+            return await this.update2(
+              assetAlreadyExist.id,
               createHsbAssetPlainDto2,
             );
 
-            const asset = this.assetRepository.create({
-              ...data,
-              details: {
-                ...details,
-                brand: await this.catalogOptionService.findOneByName(
-                  details.brand,
-                  this.configAssets.assetBrandCatalogName,
-                ),
-              },
-            });
-            return asset;
-          },
-        );
-
-        const ajja = await Promise.all(jajajxd);
-        await this.assetRepository.save(ajja);
-        return 'puta';
-      } else {
-        const { code } = createHsbAssetPlainDto;
-
-        const assetAlreadyExist = assets.find(
-          (asset) => asset.details.code === code,
-        );
-
-        if (assetAlreadyExist)
-          return await this.update2(
-            assetAlreadyExist.id,
-            createHsbAssetPlainDto,
+          const { details, ...data } = this.formatAssetPlainData(
+            createHsbAssetPlainDto2,
           );
 
-        const { details, ...data } = this.formatAssetPlainData(
-          createHsbAssetPlainDto,
-        );
+          const asset = this.assetRepository.create({
+            ...data,
+            details: {
+              ...details,
+              brand,
+            },
+          });
+          return asset;
+        }),
+      );
 
-        const asset = this.assetRepository.create({
-          ...data,
-          details: {
-            ...details,
-            brand: await this.catalogOptionService.findOneByName(
-              details.brand,
-              this.configAssets.assetBrandCatalogName,
-            ),
-          },
-        });
+      brandsList.forEach(
+        async (brandName) =>
+          await this.catalogOptionService.findOneByName(
+            brandName,
+            this.configAssets.assetBrandCatalogName,
+          ),
+      );
 
-        await this.assetRepository.save(asset);
-        return asset;
-      }
-      return;
+      await this.assetRepository.save(promiseAssetsArr);
+      return 'Asset created';
     } catch (error) {
       this.exeptionLogger.logException(error);
+      return;
     }
   }
 
@@ -195,11 +147,19 @@ export class HsbAssetsService {
   //   }
   // }
   async update2(id: number, updateHsbAssetDto: UpdateHsbAssetDto2) {
-    const formatedData = this.formatAssetPlainData(updateHsbAssetDto);
+    const { details, ...assetData } =
+      this.formatAssetPlainData(updateHsbAssetDto);
 
     const asset = await this.assetRepository.preload({
       id,
-      ...formatedData,
+      ...assetData,
+      details: {
+        ...details,
+        brand: await this.catalogOptionService.findOneByName(
+          details.brand,
+          this.configAssets.assetBrandCatalogName,
+        ),
+      },
     });
 
     if (!asset) throw new NotFoundException(`asset whith id ${id} not found`);

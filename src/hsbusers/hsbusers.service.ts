@@ -3,16 +3,19 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
-  UseGuards,
+  UnprocessableEntityException,
 } from '@nestjs/common';
+
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import * as XLSX from 'xlsx';
+
 import { HsbuserDto } from './dto/create-hsbuser.dto';
 import { UpdateHsbuserDto } from './dto/update-hsbuser.dto';
-import { hash, genSalt } from 'bcrypt';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Hsbuser } from './entities/hsbuser.entity';
-import { Repository } from 'typeorm';
-import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { HandleException } from 'src/common/handleExeption';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { ValidateId } from 'src/utils/idValidation';
 import { defaultDatesData } from './dto/userVacations.dto';
 
@@ -24,34 +27,53 @@ export class HsbusersService {
     @InjectRepository(Hsbuser)
     private readonly userRepository: Repository<Hsbuser>,
   ) {}
-  async create({ password, ...userData }: HsbuserDto) {
-    if (!ValidateId(userData.id)) {
-      throw new BadRequestException(
-        `${userData.id} is not a valid identification`,
-      );
+  async create(hsbuserDto: HsbuserDto | HsbuserDto[], usersArr?: HsbuserDto[]) {
+    const users = usersArr ? usersArr : await this.findAll({});
+
+    if (!Array.isArray(hsbuserDto)) {
+      hsbuserDto = [hsbuserDto];
     }
 
-    const hashedPassword = await hash(password, await genSalt(8));
+    const promiseUsersArr = await Promise.all(
+      hsbuserDto.map(async (userData) => {
+        const userAlreadyExist = (users as HsbuserDto[]).find(
+          (usr) => usr.id === userData.id,
+        );
 
-    const findUser = await this.userRepository.preload({ id: userData.id });
+        if (userAlreadyExist && usersArr) {
+          return await this.update(userData.id, userData);
+        }
 
-    if (findUser)
-      throw new BadRequestException(
-        `User with id: ${userData.id} already exist`,
-      );
+        if (!ValidateId(userData.id) && !usersArr)
+          throw new BadRequestException(
+            `${userData.id} is not a valid identification`,
+          );
 
-    const user = this.userRepository.create({
-      ...userData,
-      details: { ...userData.details, ...defaultDatesData },
-      password: hashedPassword,
-    });
+        const hashedPassword = usersArr
+          ? userData.password
+          : bcrypt.hashSync(userData.password, bcrypt.genSaltSync(8));
 
-    try {
-      await this.userRepository.save(user);
-      return user;
-    } catch (error) {
-      this.exeptionLogger.logException(error);
-    }
+        const findUser = await this.userRepository.preload({
+          id: userData.id,
+        });
+
+        if (findUser && !usersArr) {
+          throw new BadRequestException(
+            `User with id: ${userData.id} already exist`,
+          );
+        }
+
+        const user = this.userRepository.create({
+          ...userData,
+          details: { ...userData.details, ...defaultDatesData },
+          password: hashedPassword,
+        });
+
+        return user;
+      }),
+    );
+
+    return await this.userRepository.save(promiseUsersArr);
   }
 
   async findAll({ limit = 1000, offset = 0 }: PaginationDto) {
@@ -94,8 +116,6 @@ export class HsbusersService {
     return userName;
   }
 
-  // getUserIdName()
-
   async findOneByEmail(email: string) {
     const user = await this.userRepository.findOneBy({
       email: email.toLowerCase().trim(),
@@ -137,7 +157,7 @@ export class HsbusersService {
       ...userData,
       password:
         password && password !== undefined
-          ? await hash(password, await genSalt(8))
+          ? await bcrypt.hash(password, await bcrypt.genSalt(8))
           : password,
     });
 
@@ -159,5 +179,76 @@ export class HsbusersService {
     } catch (error) {
       this.exeptionLogger.logException(error);
     }
+  }
+
+  async downloadUsersXlsx(users: HsbuserDto[], fileName: string) {
+    if (!users) throw new UnprocessableEntityException();
+
+    const plainData = users.map(({ details, ...userData }) => {
+      // fields in observation
+      delete details.vacations;
+
+      return { ...userData, ...details };
+    });
+
+    const worksheet = XLSX.utils.json_to_sheet(plainData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, fileName);
+
+    return workbook;
+  }
+
+  async uploadUsersXlsx(usersFile: Express.Multer.File) {
+    if (!usersFile) throw new UnprocessableEntityException('File error');
+
+    const usersFromDb: HsbuserDto[] = await this.findAll({});
+
+    const workbook = XLSX.read(usersFile.buffer, {
+      type: 'buffer',
+      cellDates: true,
+    });
+
+    const woorksheetData = [
+      ...(XLSX.utils
+        .sheet_to_json(workbook.Sheets[workbook.SheetNames[0]])
+        .map(({ id, name, email, active, password, ...userData }) => {
+          return {
+            id: id.toString(),
+            name,
+            email,
+            active: ['yes', 'true', 'si', 'verdadero'].includes(
+              active.toString().toLowerCase(),
+            ),
+            password: bcrypt.hashSync(id.toString(), bcrypt.genSaltSync(8)),
+            details: {
+              vacations: [],
+              ...userData,
+            },
+          };
+        }) as HsbuserDto[]),
+    ]
+      .reverse()
+      .filter((user, index, usersArr) => {
+        if (
+          index ===
+            usersArr.findIndex(
+              (userItem: HsbuserDto) => userItem.id === user.id,
+            ) &&
+          index ===
+            usersArr.findIndex(
+              (userItem: HsbuserDto) => userItem.email === user.email,
+            )
+        ) {
+          if (!ValidateId(user.id)) {
+            console.log('user ', user.id, 'no válido');
+            return false;
+          }
+          return true;
+        }
+        return false;
+      });
+
+    await this.create(woorksheetData, usersFromDb);
+    return 'success';
   }
 }

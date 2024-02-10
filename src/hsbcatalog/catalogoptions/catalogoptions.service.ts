@@ -25,7 +25,8 @@ export class CatalogoptionsService {
       await this.catalogOptionRepository.save(catalogOption);
       return catalogOption;
     } catch (error) {
-      this.exeptionLogger.logException(error);
+      console.log('duplicated');
+      // this.exeptionLogger.logException(error);
     }
   }
 

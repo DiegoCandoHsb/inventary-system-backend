@@ -129,6 +129,8 @@ export class assetDetailsDto {
 }
 
 export class CreateHsbAssetDto {
+  [key: string]: any;
+
   @IsString()
   @IsNotEmpty()
   itemName: string;

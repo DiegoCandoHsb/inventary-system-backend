@@ -6,9 +6,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AssetType } from '../constants/assetType';
-import { IsNotEmpty, Validate } from 'class-validator';
-import { Inject } from '@nestjs/common';
-import { HsbusersService } from 'src/hsbusers/hsbusers.service';
 
 class assetDetails {
   code: string;

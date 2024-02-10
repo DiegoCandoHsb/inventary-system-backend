@@ -9,8 +9,6 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
-  Res,
-  Req,
 } from '@nestjs/common';
 import { HsbAssetsService } from './hsb-assets.service';
 import { CreateHsbAssetDto2 } from './dto/create-hsb-asset.dto';
@@ -19,8 +17,6 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { IsPublic } from 'src/common/decorators/is-public/is-public.decorator';
 import { AssetType } from './constants/assetType';
-
-import { Request } from 'express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('assets')

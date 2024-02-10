@@ -1,4 +1,4 @@
-export const ValidateId = (id: string): boolean => {
+const ValidateId2 = (id: string): boolean => {
   const productsResults: number[] = [];
 
   let claeredResults: number[] = [];
@@ -45,3 +45,31 @@ export const ValidateId = (id: string): boolean => {
 
   return finalResult();
 };
+
+export function ValidateId(value: string): any {
+  const id = [...value];
+  if (+id[0].concat(id[1]) < 0 || +id[0].concat(id[1]) > 24 || +id[2] > 6) {
+    return false;
+  }
+
+  const total = id
+    .map(Number)
+    .map((num, index) => {
+      if (!Boolean(index % 2)) {
+        const res = num * 2;
+        return res >= 10 ? res - 9 : res;
+      } else {
+        return num * 1;
+      }
+    })
+    .reduce((total, current) => total + current, 0);
+  let decenasuperior = total;
+
+  while (Boolean(decenasuperior % 10)) {
+    decenasuperior += 1;
+  }
+
+  const result = decenasuperior - total;
+
+  return result === 0;
+}

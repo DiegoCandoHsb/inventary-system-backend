@@ -8,12 +8,15 @@ import {
   Delete,
   Query,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { HsbusersService } from './hsbusers.service';
 import { HsbuserDto } from './dto/create-hsbuser.dto';
 import { UpdateHsbuserDto } from './dto/update-hsbuser.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('user')
@@ -43,5 +46,19 @@ export class HsbusersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.hsbusersService.remove(id);
+  }
+
+  @Post('download')
+  downloadFile(@Body() payload: { users: HsbuserDto[]; fileName: string }) {
+    return this.hsbusersService.downloadUsersXlsx(
+      payload.users,
+      payload.fileName,
+    );
+  }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    return this.hsbusersService.uploadUsersXlsx(file);
   }
 }
