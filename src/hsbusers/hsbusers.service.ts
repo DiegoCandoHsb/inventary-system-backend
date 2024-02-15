@@ -41,6 +41,7 @@ export class HsbusersService {
         );
 
         if (userAlreadyExist && usersArr) {
+          delete userData.password;
           return await this.update(userData.id, userData);
         }
 
@@ -65,14 +66,13 @@ export class HsbusersService {
 
         const user = this.userRepository.create({
           ...userData,
-          details: { ...userData.details, ...defaultDatesData },
+          details: { ...defaultDatesData, ...userData.details },
           password: hashedPassword,
         });
 
         return user;
       }),
     );
-
     return await this.userRepository.save(promiseUsersArr);
   }
 
@@ -185,10 +185,16 @@ export class HsbusersService {
     if (!users) throw new UnprocessableEntityException();
 
     const plainData = users.map(({ details, ...userData }) => {
-      // fields in observation
-      delete details.vacations;
+      const userDetails = {
+        lastname: details.lastname,
+        secondname: details.secondname,
+        secondlastname: details.secondlastname,
+        phone: details.phone,
+        payroll: details.payroll,
+        admissionDate: details.admissionDate,
+      };
 
-      return { ...userData, ...details };
+      return { ...userData, ...userDetails };
     });
 
     const worksheet = XLSX.utils.json_to_sheet(plainData);
