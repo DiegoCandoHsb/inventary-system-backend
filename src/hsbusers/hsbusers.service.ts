@@ -152,6 +152,7 @@ export class HsbusersService {
   ) {
     if (id && !ValidateId(id))
       throw new BadRequestException(`${id} is not a valid identification`);
+
     const user = await this.userRepository.preload({
       id: userId,
       ...userData,
@@ -160,11 +161,14 @@ export class HsbusersService {
           ? await bcrypt.hash(password, await bcrypt.genSalt(8))
           : password,
     });
+    // const user = await this.findOne(userId);
+    // const updatedUserData = { ...user, id: id };
 
     if (!user) throw new NotFoundException(`User with id: ${userId} not found`);
 
     try {
       await this.userRepository.save(user);
+      // await this.userRepository.update(user.id, updatedUserData);
       return user;
     } catch (error) {
       this.exeptionLogger.logException(error);
